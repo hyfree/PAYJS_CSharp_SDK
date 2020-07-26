@@ -2,10 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>hyfree</Authors>
+    <PackageId>github.hyfree.PAYJS_CSharp_SDK</PackageId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MoreNote.Common\MoreNote.Common.csproj" />
-  </ItemGroup>
 
 </Project>
