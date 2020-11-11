@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Authors>hyfree</Authors>
     <PackageId>github.hyfree.PAYJS_CSharp_SDK</PackageId>
+    <Version>1.1.0</Version>
+    <Description>升级到.net5</Description>
   </PropertyGroup>
 
 </Project>
