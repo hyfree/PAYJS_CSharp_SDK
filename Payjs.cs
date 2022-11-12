@@ -17,9 +17,13 @@ namespace PAYJS_CSharp_SDK
    public  class Payjs
     {
         private string[] apiList = new string[] { "native", "cashier", "jsapi", "micropay", "facepay", "refund", "close", "user", "info" };
-
+        /// <summary>
+        /// 商户号
+        /// </summary>
         private string mchid;
-
+        /// <summary>
+        /// 商户Key
+        /// </summary>
         private string key;
 
         private Dictionary<string, string> apiUrl;
@@ -41,29 +45,17 @@ namespace PAYJS_CSharp_SDK
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public string native(Dictionary<string, string> param)
+        public string Native(Dictionary<string, string> param)
         {
-            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name];
+            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name.ToLower()];
             return this.post(url, param);
         }
-        public NativeResponseMessage native(NativeRequestMessage nativeRequestMessage)
+        public NativeResponseMessage Native(NativeRequestMessage nativeRequestMessage)
         {
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param["total_fee"] = nativeRequestMessage.total_fee.ToString();
-            param["out_trade_no"] = nativeRequestMessage.out_trade_no.ToString(); ;
-            param["body"] = nativeRequestMessage.body;
-            param["attch"] = nativeRequestMessage.attch;
-            //可选项目
-            if (!String.IsNullOrEmpty(nativeRequestMessage.notify_url))
-            {
-                param["notify_url"] = nativeRequestMessage.notify_url;
-            }
-            if (!String.IsNullOrEmpty(nativeRequestMessage.type))
-            {
-                param["type"] = nativeRequestMessage.notify_url;
-            }
-            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name];
+            Dictionary<string, string> param = nativeRequestMessage.GetApiParam();
+            
+            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name.ToLower()];
             String json= this.post(url, param);
             NativeResponseMessage message= JsonSerializer.Deserialize<NativeResponseMessage>(json, MyJsonConvert.GetOptions());
             return message;
@@ -74,10 +66,16 @@ namespace PAYJS_CSharp_SDK
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public string cashier(Dictionary<string, string> param)
+        public string Cashier(Dictionary<string, string> param)
         {
             string url = this.apiUrl[MethodBase.GetCurrentMethod().Name];
-            return url + "?" + buildParam(param);
+            return url + "?" + BuildParam(param);
+        }
+        public string Cashier(CashierRequestMessage cashierRequestMessage)
+        {
+            Dictionary<string, string> param=cashierRequestMessage.GetApiParam();
+            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name.ToLower()];
+            return url + "?" + BuildParam(param);
         }
 
         /// <summary>
@@ -164,7 +162,7 @@ namespace PAYJS_CSharp_SDK
         {
             string originSign = param["sign"];
             param.Remove("sign");
-            return sign(param)["sign"] == originSign;
+            return SignParam(param)["sign"] == originSign;
         }
         public bool notifyCheck(NotifyResponseMessage notifyResponseMessage)
         {
@@ -188,7 +186,7 @@ namespace PAYJS_CSharp_SDK
          
             string originSign = param["sign"];
             param.Remove("sign");
-            return sign(param)["sign"] == originSign;
+            return SignParam(param)["sign"] == originSign;
         }
 
         /// <summary>
@@ -196,9 +194,9 @@ namespace PAYJS_CSharp_SDK
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        public string user(Dictionary<string, string> param)
+        public string User(Dictionary<string, string> param)
         {
-            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name];
+            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name.ToLower()];
             return this.post(url, param);
         }
 
@@ -206,14 +204,14 @@ namespace PAYJS_CSharp_SDK
         /// 商户资料
         /// </summary>
         /// <returns></returns>
-        public string info()
+        public string Info()
         {
-            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name];
+            string url = this.apiUrl[MethodBase.GetCurrentMethod().Name.ToLower()];
             return this.post(url, new Dictionary<string, string>());
         }
 
 
-        private Dictionary<string, string> sign(Dictionary<string, string> param)
+        private Dictionary<string, string> SignParam(Dictionary<string, string> param)
         {
             param.Add("mchid", this.mchid);
             //去掉空的，排序
@@ -247,9 +245,9 @@ namespace PAYJS_CSharp_SDK
             return sBuilder.ToString();
         }
 
-        private string buildParam(Dictionary<string, string> param)
+        private string BuildParam(Dictionary<string, string> param)
         {
-            param = sign(param);
+            param = SignParam(param);
             if (!(param == null || param.Count == 0))
             {
                 StringBuilder sb = new StringBuilder();
@@ -268,7 +266,7 @@ namespace PAYJS_CSharp_SDK
             request.Method = "POST";
             request.UserAgent = "PAYJS C# SDK BY LIBINBIN";
             request.ContentType = "application/x-www-form-urlencoded";
-            string str = buildParam(parameters);
+            string str = BuildParam(parameters);
             if (str != "")
             {
                 byte[] data = Encoding.UTF8.GetBytes(str);

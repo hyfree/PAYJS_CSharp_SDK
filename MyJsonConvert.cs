@@ -54,16 +54,9 @@ namespace PAYJS_CSharp_SDK
             //return DateTime.Parse(reader.GetString());
             //  Debug.Assert();
             string a = reader.GetString();
-            try
-            {
+           
                 //return long.Parse(reader.GetString());
                 return long.Parse(reader.GetString(), System.Globalization.NumberStyles.HexNumber);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
         }
       
 

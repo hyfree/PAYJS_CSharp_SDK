@@ -1,26 +1,27 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace PAYJS_CSharp_SDK.Model
 {
     /// <summary>
-    /// Native 扫码支付（主扫） API请求数据
+    /// 收银台支付请求
     /// </summary>
-    public class NativeRequestMessage
+    public class CashierRequestMessage
     {
         /// <summary>
-        /// mchid
+        /// 商户号
         /// </summary>
         public String mchid { get; set; }
         /// <summary>
-        /// total_fee
+        /// 金额
         /// </summary>
         public int total_fee { get; set; }
         /// <summary>
-        /// 用户端自主生成的订单号
+        /// 用户端自主生成的订单号，在用户端要保证唯一性
         /// </summary>
         public String out_trade_no { get; set; }
         /// <summary>
@@ -36,20 +37,32 @@ namespace PAYJS_CSharp_SDK.Model
         /// </summary>
         public string notify_url { get; set; }
         /// <summary>
-        /// 支付宝交易传值：alipay ，微信支付无需此字段
+        /// 用户支付成功后，前端跳转地址
         /// </summary>
-        public string type { get; set; }
+        public string callback_url { get; set; }
+        /// <summary>
+        /// auto=1：无需点击支付按钮，自动发起支付。默认手动点击发起支付
+        /// </summary>
+        public bool? auto { get; set; }
+
+        /// <summary>
+        /// hide=1：隐藏收银台背景界面。默认显示背景界面（这里hide为1时，自动忽略auto参数）
+        /// </summary>
+        public bool? hide { get; set; } 
+        /// <summary>
+        /// 收银台显示的logo图片url
+        /// </summary>
+        public string logo { get; set; }
         /// <summary>
         /// 数据签名
         /// </summary>
         public string sign { get; set; }
         public string ToJsonString()
         {
-            String json  = JsonSerializer.Serialize(this, MyJsonConvert.GetOptions());
+            String json = JsonSerializer.Serialize(this, MyJsonConvert.GetOptions());
             return json;
         }
-
-        public Dictionary<string,string> GetApiParam()
+        public Dictionary<string, string> GetApiParam()
         {
             Dictionary<string, string> param = new Dictionary<string, string>();
             param["total_fee"] = this.total_fee.ToString();
@@ -61,10 +74,23 @@ namespace PAYJS_CSharp_SDK.Model
             {
                 param["notify_url"] = this.notify_url;
             }
-            if (!String.IsNullOrEmpty(this.type))
+            if (!string.IsNullOrEmpty(this.callback_url))
             {
-                param["type"] = this.notify_url;
+                param["callback_url"] = this.callback_url;
             }
+            if (auto!=null)
+            {
+                param["auto"] = this.auto.Value.ToString();
+            }
+            if (hide != null)
+            {
+                param["hide"] = this.hide.Value.ToString();
+            }
+            if (!string.IsNullOrEmpty(this.logo))
+            {
+                param["logo"] = this.logo;
+            }
+
             return param;
         }
     }

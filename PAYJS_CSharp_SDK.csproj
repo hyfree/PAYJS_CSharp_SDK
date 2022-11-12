@@ -1,11 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
     <Authors>hyfree</Authors>
     <PackageId>github.hyfree.PAYJS_CSharp_SDK</PackageId>
-    <Version>1.1.0</Version>
-    <Description>升级到.net5</Description>
+    <Version>1.2.2</Version>
+    <Description>升级到.NET Standard 2.1</Description>
+    <Title>PAYJS_CSharp_SDK</Title>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="7.0.0" />
+  </ItemGroup>
 
 </Project>
